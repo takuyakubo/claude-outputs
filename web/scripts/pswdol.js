@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const passwordOverlayHTML = `
         <div id="password-overlay">
             <div class="password-container">
-                <h2 class="password-title">転移学習スライド</h2>
+                <h2 class="password-title">Claude生成スライド</h2>
                 <p>このコンテンツはパスワードで保護されています。</p>
                 <input type="password" id="password-input" class="password-input" placeholder="パスワードを入力してください">
                 <div class="password-message" id="password-message"></div>
