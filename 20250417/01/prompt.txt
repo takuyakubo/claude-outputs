@@ -1,0 +1,7 @@
+添付のPDFの内容を日本語で説明するスライドをHTML形式でartifactに作って下さい。
+HTMLのテンプレートとしては添付するHTMLを使って下さい。
+
+attached: 20250417/01/uploaded_files/ai-in-the-enterprise.pdf
+attached: 20250417/01/uploaded_files/transferlearning_20250414.html
+
+Claude Desktop バージョン 0.9.1
