@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$']],
+            displayMath: [['$$', '$$']]
+          }
+        };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+    <title>Hamming符号とコセットリーダーの解説</title>
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/index.css">
+</head>
+<body>
+    <!-- 表紙スライド -->
+    <div class="slide">
+        <div class="slide-title">
+            <h1>Hamming符号とコセットリーダー</h1>
+            <p>線形符号理論講座</p>
+        </div>
+        <div style="text-align: center; margin-top: 50px;">
+            <h2>重要な符号とその数学的基礎</h2>
+            <h3>Hamming符号の理論と応用</h3>
+            <p style="margin-top: 80px;">勉強会資料</p>
+            <p>2025年5月7日</p>
+        </div>
+    </div>
+
+    <!-- 目次スライド -->
+    <div class="slide">
+        <h2>目次</h2>
+        <ol>
+            <li>Hamming符号の基本概念</li>
+            <li>Hamming符号の定義</li>
+            <li>Hamming符号の具体例</li>
+            <li>コセットリーダーの概念</li>
+            <li>コセットリーダーと復号</li>
+            <li>標準配列</li>
+            <li>拡大および短縮Hamming符号</li>
+        </ol>
+        <div class="note">
+            <p>本スライドは、Hamming符号に関する理論的背景から実用的な例まで体系的に学ぶことができる内容となっています。また、線形符号理論における重要な概念であるコセットリーダーについても詳しく解説しています。</p>
+        </div>
+    </div>
+
+    <!-- 基本概念 -->
+    <div class="slide divider-slide">
+        <h1>1. Hamming符号の基本概念</h1>
+    </div>
+
+    <div class="slide">
+        <h2>Hamming符号とは</h2>
+        
+        <p>Hamming符号 [Ham50] は重要で最もよく知られた符号の1つです。</p>
+        
+        <div class="note">
+            <p>Hamming符号は、Richard Hammingによって1950年に開発された線形符号で、単一の誤りを訂正する能力を持ちます。</p>
+        </div>
+        
+        <h3>Hamming符号の特徴</h3>
+        <ul>
+            <li>単一誤り訂正が可能な線形符号</li>
+            <li>効率的な符号化・復号アルゴリズム</li>
+            <li>完全符号(perfect code)の一つ</li>
+            <li>通信システムやコンピュータメモリでの誤り訂正に広く使用</li>
+        </ul>
+        
+        <div class="definition-box">
+            <p><strong>完全符号 (perfect code)：</strong></p>
+            <p>重み $t$ 以下のすべてのパターンをコセットリーダとし、それ以外のパターンをコセットリーダとしてもたない符号。</p>
+            <p>Hamming符号は数少ない完全符号の1つです。</p>
+        </div>
+    </div>
+
+    <!-- Hamming符号の定義 -->
+    <div class="slide divider-slide">
+        <h1>2. Hamming符号の定義</h1>
+    </div>
+
+    <div class="slide">
+        <h2>Hamming符号の数学的定義</h2>
+        
+        <div class="definition-box">
+            <p><strong>定義 2.2.1 (Hamming符号):</strong></p>
+            <p>$m$ 行 $2^m - 1$ 列のパリティ検査行列 $H$ を考える。2元 $(n, k, d)$ Hamming符号は、すべてゼロのパターンを除く長さ $m$ のすべての可能なパターンを列ベクトルとするパリティ検査行列 $H$ で定義される符号である。</p>
+        </div>
+        
+        <p>$2^m - 1$ 個の任意の2つの列の和は非ゼロであるため、定理2.1.7より次の結果を得ます。</p>
+        
+        <div class="definition-box">
+            <p><strong>定理 2.2.1:</strong></p>
+            <p>2元 $(n, k, d)$ Hamming符号はすべての単一誤りを訂正できる。ここで、パラメータは次式で与えられる。</p>
+            <div class="equation">
+                $n = 2^m - 1$,<br>
+                $k = 2^m - m - 1$,<br>
+                $d = 3$.
+            </div>
+        </div>
+        
+        <div class="note">
+            <p><strong>証明：</strong> 定義2.2.1より $n, k$ は明らか。また、パリティ検査行列 $H$ の列ベクトルはすべて異なるから任意の2つの列の和は0とはならない。すなわち、$d - 1 = 2$ である。</p>
+        </div>
+    </div>
+
+    <!-- 具体例 -->
+    <div class="slide divider-slide">
+        <h1>3. Hamming符号の具体例</h1>
+    </div>
+
+    <div class="slide">
+        <h2>2元 (7, 4, 3) Hamming符号の例</h2>
+        
+        <h3>例 2.2.1</h3>
+        <p>2元 (7, 4, 3) Hamming符号のパリティ検査行列 $H$ の1つの例は次式で与えられます：</p>
+        
+        <div class="equation">
+            $H = \begin{bmatrix} 
+            0001111 \\
+            0110011 \\
+            1010101
+            \end{bmatrix}$
+        </div>
+        
+        <p>ここで、$H$ の列は誤りの生じた位置をシンドロームが2進で直接示すように配置しています。例えば、$e = 0001000$ なら $s = 100$ であり、$s$ は2進数で4であるから、$e$ の4ビット目に誤りが生じたことを示しています。</p>
+        
+        <h3>他の例</h3>
+        <p>2元 (7, 4, 3) Hamming符号の他の例：</p>
+        
+        <div class="equation">
+            $H = \begin{bmatrix} 
+            0111100 \\
+            1011010 \\
+            1101001
+            \end{bmatrix}$
+        </div>
+        
+        <p>さらに、他の例として：</p>
+        
+        <div class="equation">
+            $H = \begin{bmatrix} 
+            1001110 \\
+            0100111 \\
+            0011101
+            \end{bmatrix}$
+        </div>
+        
+        <p>このように選ぶと、以下のような符号語が得られます：</p>
+        
+        <div class="code-example">
+            0000000 0001011<br>
+            1110100 1000101<br>
+            0111010 1100010<br>
+            0011101 0110001<br>
+            1001110 1011000<br>
+            0100111 0101100<br>
+            1010011 0010110<br>
+            1101001 1111111
+        </div>
+    </div>
+
+    <!-- コセットリーダーの解説 -->
+    <div class="slide divider-slide">
+        <h1>4. コセットリーダーの概念</h1>
+    </div>
+    
+    <div class="slide">
+        <h2>コセットリーダーの定義と役割</h2>
+        
+        <h3>コセットリーダーとは</h3>
+        <div class="definition-box">
+            <p><strong>定義:</strong> コセットリーダーとは、線形符号の各コセット（同値類）から選ばれる代表元です。通常、各コセット内で最小重み（非ゼロ成分の数が最も少ない）を持つベクトルがコセットリーダーとして選ばれます。</p>
+        </div>
+        
+        <h3>コセットと線形符号の関係</h3>
+        <ul>
+            <li>$(n, k, d)$ 線形符号 $C$ は全ベクトル空間 $B^n = \{0, 1\}^n$ の部分空間</li>
+            <li>全ベクトル空間 $B^n$ は符号 $C$ によって $2^{n-k}$ 個のコセットに分割される</li>
+            <li>各コセットは符号語 $v \in C$ とエラーパターン $e$ の和 $v + e$ の集合として表現できる</li>
+            <li>各コセットは $2^k$ 個の要素を持つ</li>
+        </ul>
+        
+        <div class="equation">
+            $B^n = \bigcup_{i=0}^{2^{n-k}-1} (C + e_i)$
+        </div>
+        
+        <div class="note">
+            <p>コセットリーダーは誤り訂正において重要な役割を果たします。受信語が属するコセットを特定し、そのコセットリーダーが示すエラーパターンを用いて復号を行います。完全符号では、コセットリーダーは最大訂正可能な誤りパターンと一対一対応します。</p>
+        </div>
+    </div>
+    
+    <!-- コセットリーダーと復号 -->
+    <div class="slide divider-slide">
+        <h1>5. コセットリーダーと復号</h1>
+    </div>
+    
+    <div class="slide">
+        <h2>コセットリーダーと復号プロセス</h2>
+        
+        <h3>コセットリーダーの選択基準</h3>
+        <ul>
+            <li><strong>最小重み基準:</strong> 各コセット内で重みが最小のベクトルをコセットリーダーとして選ぶ</li>
+            <li><strong>同一重みの場合:</strong> 辞書式順序など何らかの基準で一意に選択</li>
+            <li><strong>完全符号の場合:</strong> 重み $t$ 以下（$t$ は訂正能力）のすべての誤りパターンが一意にコセットリーダーとなる</li>
+        </ul>
+        
+        <h3>復号プロセスにおけるコセットリーダーの役割</h3>
+        <ol>
+            <li>受信語 $r$ に対して、シンドローム $s = rH^T$ を計算</li>
+            <li>シンドローム $s$ に対応するコセットリーダー $e$ を特定</li>
+            <li>推定符号語 $v = r + e$ として復号</li>
+        </ol>
+        
+        <div class="definition-box">
+            <p><strong>定理:</strong> 最小重みを持つコセットリーダーを用いた復号法は、最小距離復号（MDD: Minimum Distance Decoding）と等価であり、符号語の生起確率が等しい場合に平均誤り確率を最小にします。</p>
+        </div>
+        
+        <div class="note">
+            <p>Hamming符号の場合、単一誤りのみを訂正するため、コセットリーダーは重み1以下のすべてのパターン（ゼロベクトルと単一ビット誤りパターン）となります。これらは完全にシンドロームと一対一対応しているため、効率的な復号が可能です。</p>
+        </div>
+    </div>
+
+    <!-- 標準配列 -->
+    <div class="slide divider-slide">
+        <h1>6. 標準配列</h1>
+    </div>
+
+    <div class="slide">
+        <h2>標準配列の構造と利用法</h2>
+        
+        <h3>標準配列の形式</h3>
+        <table>
+            <tr>
+                <th>コセットリーダ</th>
+                <th colspan="3">符号語との和</th>
+                <th>シンドローム</th>
+            </tr>
+            <tr>
+                <td>$c_0 = 0$</td>
+                <td>$v_1$</td>
+                <td>$v_2$</td>
+                <td>$\cdots$</td>
+                <td>$s_0 = 0$</td>
+            </tr>
+            <tr>
+                <td>$c_1$</td>
+                <td>$c_1 + v_1$</td>
+                <td>$c_1 + v_2$</td>
+                <td>$\cdots$</td>
+                <td>$s_1$</td>
+            </tr>
+            <tr>
+                <td>$c_2$</td>
+                <td>$c_2 + v_1$</td>
+                <td>$c_2 + v_2$</td>
+                <td>$\cdots$</td>
+                <td>$s_2$</td>
+            </tr>
+            <tr>
+                <td>$\vdots$</td>
+                <td>$\vdots$</td>
+                <td>$\vdots$</td>
+                <td>$\vdots$</td>
+                <td>$\vdots$</td>
+            </tr>
+        </table>
+        
+        <h3>標準配列の特徴</h3>
+        <ul>
+            <li>最上位の行は符号語の集合 $C = \{v_0, v_1, \ldots, v_{2^k-1}\}$</li>
+            <li>各行はひとつのコセットを表す</li>
+            <li>第一列はコセットリーダ（各コセットの代表）</li>
+            <li>$c_0 = 0$（ゼロベクトル）が最初のコセットリーダ</li>
+            <li>各行内の要素はすべて同じシンドロームを持つ</li>
+        </ul>
+        
+        <div class="note">
+            <p>標準配列は復号表として使用できます。受信語 $w$ が標準配列の中のどの位置にあるかを見つけ、その列の最上位にある符号語に復号します。これは、最も生起確率の高い符号語を選択する最小距離復号（MDD）と等価です。</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>復号性能と正しい復号確率</h2>
+        
+        <h3>正しく復号される確率</h3>
+        <div class="definition-box">
+            <p><strong>定理:</strong></p>
+            <p>誤り確率 $\varepsilon$ の2元対称通信路において、$(n, k, d)$ 線形符号の標準配列による復号法を考える。正しく復号される確率 $P(C)$ は次式で与えられる：</p>
+            <div class="equation">
+                $P(C) = \sum_{\ell=0}^{n} A_\ell \varepsilon^\ell (1-\varepsilon)^{n-\ell}$
+            </div>
+            <p>ここで、$A_\ell$ は $W_H(c_i) = \ell$ となるコセットリーダ $c_i$ の数である。</p>
+        </div>
+        
+        <h3>Hamming符号の場合</h3>
+        <ul>
+            <li>重み0のコセットリーダ: 1個（ゼロベクトル）</li>
+            <li>重み1のコセットリーダ: $n = 2^m - 1$ 個（単一ビット誤りパターン）</li>
+            <li>完全符号なので、重み2以上のコセットリーダは存在しない</li>
+        </ul>
+        
+        <div class="note">
+            <p>Hamming符号は完全符号であるため、重み1以下のすべてのパターン（ゼロベクトルと単一ビット誤りパターン）がコセットリーダーとなり、それ以外のパターンはコセットリーダーとならない。これは、Hamming符号の単一誤り訂正能力と直接関係しています。</p>
+        </div>
+    </div>
+
+    <!-- 拡大および短縮Hamming符号 -->
+    <div class="slide divider-slide">
+        <h1>7. 拡大および短縮Hamming符号</h1>
+    </div>
+
+    <div class="slide">
+        <h2>拡大Hamming符号</h2>
+        
+        <div class="definition-box">
+            <p><strong>定理 2.2.2:</strong></p>
+            <p>$(n, k, d)$ 線形符号において、$d$ を奇数とする。これに偶数パリティ検査記号を付加して、$(n + 1, k, d')$ 拡大 (extended) 線形符号が得られる。ここで、$d' = d + 1$ である。</p>
+        </div>
+        
+        <div class="note">
+            <p><strong>証明：</strong> $(n, k, d)$ 線形符号を $C$、$(n + 1, k, d')$ 拡大線形符号を $C'$ とする。$\forall v, v' \in C'$ に対し附加した偶数パリティ検査記号が同じならば、$\min_{v \neq v'} D_H(v, v') = d$、違っていれば、$\min_{v \neq v'} D_H(v, v') = d + 1$ である。符号 $C'$ の符号語の重みは偶数であるから符号 $C'$ の最小距離も偶数である。したがって、$d$ が奇数のとき、符号 $C'$ の最小距離は $d' = d + 1$ である。</p>
+        </div>
+        
+        <h3>拡大Hamming符号のパラメータ</h3>
+        <div class="definition-box">
+            <p><strong>系 2.2.1:</strong></p>
+            <p>2元 $(n, k, d)$ 拡大Hamming符号は単一誤りの訂正、二重誤りの検出ができる。ここで、パラメータは次式で与えられる。</p>
+            <div class="equation">
+                $n = 2^m$,<br>
+                $k = 2^m - m - 1$,<br>
+                $d = 4$.
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>短縮および削除符号</h2>
+        
+        <div class="definition-box">
+            <p><strong>定理 2.2.3:</strong></p>
+            <p>$(n, k, d)$ 線形組織符号において、$s$ 個の情報記号を除去して $(n - s, k - s, d')$ 短縮 (shortened) 符号が得られる。ここで、$d' \geq d$ である。</p>
+        </div>
+        
+        <div class="note">
+            <p><strong>証明：</strong> $s$ 個をあらかじめ0と考えればよい。このような部分符号を考えても最小距離は小さくはならない。</p>
+        </div>
+        
+        <div class="definition-box">
+            <p><strong>定理 2.2.4:</strong></p>
+            <p>$(n, k, d)$ 線形組織符号において、$s$ 個の検査記号を除去して $(n-s, k, d')$ 削除 (punctured) 符号が得られる。ここで、$d' \geq d-s, s < n-k$ である。</p>
+        </div>
+        
+        <div class="note">
+            <p><strong>証明：</strong> 最小距離 $d$ にある任意の2つの符号語において削除した $s$ 個がすべて異なるとすれば、$d' = d - s$ である。重み $d$ の符号語の非ゼロの記号の位置が削除した $s$ 個の記号の位置と異なるとき、$d' \geq d - s + 1$ となる可能性がある。</p>
+        </div>
+        
+        <p>定理2.2.3、定理2.2.4は非線形符号に対しても成り立ちます。</p>
+    </div>
+
+    <!-- まとめ -->
+    <div class="slide">
+        <h2>まとめ</h2>
+        
+        <ul>
+            <li>Hamming符号は単一誤り訂正能力を持つ線形符号</li>
+            <li>パラメータは $n = 2^m - 1$, $k = 2^m - m - 1$, $d = 3$</li>
+            <li>完全符号の一つであり、効率的な誤り訂正を実現</li>
+            <li>コセットリーダーは各コセットの代表元で、最小重みを持つベクトルが選ばれる</li>
+            <li>標準配列を用いることで、受信語から最適な復号結果を得ることができる</li>
+            <li>拡大Hamming符号は単一誤り訂正と二重誤り検出が可能 ($d = 4$)</li>
+        </ul>
+        
+        <div class="note">
+            <p>Hamming符号とコセットリーダーの概念は、符号理論の基礎として重要な役割を果たしています。特に、コセットリーダーを用いた標準配列による復号法は、理論的に最適な復号結果を得るための基盤となっています。</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>参考文献</h2>
+        
+        <ol>
+            <li>[Ham50] R. W. Hamming, "Error detecting and error correcting codes," Bell System Technical Journal, vol. 29, no. 2, pp. 147-160, 1950.</li>
+            <li>[Gol49] M. J. E. Golay, "Notes on digital coding," Proceedings of the IRE, vol. 37, p. 657, 1949.</li>
+        </ol>
+    </div>
+</body>
+</html>

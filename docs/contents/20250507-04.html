@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$']],
+            displayMath: [['$$', '$$']]
+          }
+        };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+    <title>巡回符号（Cyclic Code）の解説</title>
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/index.css">
+</head>
+<body>
+    <!-- 表紙スライド -->
+    <div class="slide">
+        <div class="slide-title">
+            <h1>巡回符号（Cyclic Code）</h1>
+            <p>線形符号理論講座</p>
+        </div>
+        <div style="text-align: center; margin-top: 50px;">
+            <h2>巡回符号の理論と応用</h2>
+            <h3>多項式表現による巡回符号の解説</h3>
+            <p style="margin-top: 80px;">勉強会資料</p>
+            <p>2025年5月7日</p>
+        </div>
+    </div>
+
+    <!-- 目次スライド -->
+    <div class="slide">
+        <h2>目次</h2>
+        <ol>
+            <li>巡回符号の基本概念</li>
+            <li>巡回符号の代数的表現</li>
+            <li>生成多項式と符号化</li>
+            <li>組織的巡回符号</li>
+            <li>パリティ検査多項式と双対符号</li>
+            <li>巡回符号の応用例</li>
+            <li>バースト誤り訂正能力</li>
+        </ol>
+        <div class="note">
+            <p>本スライドは、巡回符号に関する理論的背景から実用的な例まで体系的に学ぶことができる内容となっています。特に多項式表現による符号の理解に重点を置いています。</p>
+        </div>
+    </div>
+
+    <!-- 基本概念 -->
+    <div class="slide divider-slide">
+        <h1>1. 巡回符号の基本概念</h1>
+    </div>
+
+    <div class="slide">
+        <h2>巡回符号とは</h2>
+        
+        <p>巡回符号 (cyclic code) は最もよく研究された符号の1つで、多くの性質が知られた重要な符号です。</p>
+        
+        <div class="definition-box">
+            <p><strong>定義 2.5.1 (巡回符号)：</strong> 線形かつ符号語の巡回置換もまた符号語であるような符号 $C$ を巡回符号と呼ぶ。</p>
+        </div>
+        
+        <p>定義より、符号語 $v = (v_0, v_1, v_2, \cdots, v_{n-1}) \in C$ のとき、その巡回置換 $v^c = (v_{n-1}, v_0, v_1, \cdots, v_{n-2}) \in C$ となります。ここで、$v_i \in GF(2), i = 1, 2, \cdots, n$ です。</p>
+        
+        <h3>巡回符号の特徴</h3>
+        <ul>
+            <li>線形符号でありながら、符号化比率の点でも優れている</li>
+            <li>バースト誤り (burst error) 訂正能力を持つ</li>
+            <li>代数的構造を持ち、効率的な符号化・復号アルゴリズムが実現可能</li>
+            <li>ハードウェア実装が容易</li>
+        </ul>
+        
+        <div class="note">
+            <p>巡回符号は線形符号の一種であるため、線形符号のすべての性質を持ちます。加えて、巡回置換に対する閉じた性質を持つため、特別な代数的構造が導かれます。</p>
+        </div>
+    </div>
+
+    <!-- 巡回符号の例 -->
+    <div class="slide">
+        <h2>巡回符号の例</h2>
+        
+        <h3>例 2.5.1</h3>
+        <ul>
+            <li>(1) 例 1.2.2 の (5, 1, 5) 反復符号、例 2.2.1, 式 (2.2.2.c) の (7, 4, 3) Hamming 符号は巡回符号です。</li>
+            <li>(2) 次の $(n, k, 2)$ 符号は巡回置換に関し閉じています（ただし、$k = \log_2 n$）：
+                <div class="code-example">
+                    $v_1 = (1, 0, 0, \cdots, 0)$,<br>
+                    $v_2 = (0, 1, 0, \cdots, 0)$,<br>
+                    $\vdots$<br>
+                    $v_n = (0, 0, 0, \cdots, 1)$.
+                </div>
+                しかし、この符号は線形ではないため巡回符号ではありません。符号語の重みは常に1で、$D_H(v_i, v_j)=2, i \neq j, i, j = 1, 2, \cdots, n$ であるため、等距離符号 (equi-distance code) と呼ばれます。
+            </li>
+        </ul>
+    </div>
+
+    <!-- 代数的表現 -->
+    <div class="slide divider-slide">
+        <h1>2. 巡回符号の代数的表現</h1>
+    </div>
+
+    <div class="slide">
+        <h2>符号語の多項式表現</h2>
+        
+        <p>代数的記述を容易にするために、符号語（符号ベクトル）$v$ を多項式に対応させます：</p>
+        
+        <div class="equation">
+            $v = (v_0, v_1, v_2, \cdots, v_{n-1})$
+        </div>
+        
+        <p>これを符号語多項式 $v(x)$ として：</p>
+        
+        <div class="equation">
+            $v(x) = v_0 + v_1x + \cdots + v_{n-1}x^{n-1}$
+        </div>
+        
+        <div class="note">
+            <p><strong>例 2.5.2:</strong> ベクトル $v = 1001011$ は $v(x)=1+ x^3 + x^5 + x^6$ と表現されます。</p>
+        </div>
+        
+        <h3>巡回置換の多項式表現</h3>
+        <p>いま、$v(x)$ に $x$ を乗じ、$x^n - 1$ を法とする多項式を求めると：</p>
+        
+        <div class="equation">
+            $xv(x) = v_0x + v_1x^2 + \cdots + v_{n-2}x^{n-1} + v_{n-1}x^n$<br>
+            $= v_{n-1} + v_0x + \cdots + v_{n-2}x^{n-1} \mod (x^n - 1)$
+        </div>
+        
+        <p>これは $v$ を右に巡回置換したベクトルに対応します。代数的に言えば、環 (ring) $R_n$ のイデアル (ideal) $I$ は、もし $v(x) \in I$ ならば $xv(x) \in I$ であるような $R_n$ の線形部分空間です。したがって、長さ $n$ の巡回符号は多項式環 $R_n$ のイデアルであると言えます。</p>
+    </div>
+
+    <!-- 生成多項式 -->
+    <div class="slide divider-slide">
+        <h1>3. 生成多項式と符号化</h1>
+    </div>
+
+    <div class="slide">
+        <h2>生成多項式と符号語</h2>
+        
+        <p>情報記号ベクトルを $u = (u_0, u_1, \cdots, u_{k-1})$ とし、多項式として表現すると：</p>
+        
+        <div class="equation">
+            $u(x) = u_0 + u_1x + \cdots + u_{k-1}x^{k-1}$
+        </div>
+        
+        <p>生成多項式 (generator polynomial) $G(x)$ を：</p>
+        
+        <div class="equation">
+            $G(x) = g_0 + g_1x + \cdots + g_{n-k}x^{n-k}$
+        </div>
+        
+        <p>で与えます。$G(x)$ は巡回符号 $C$ の0でない最小次数の符号語多項式です。ここで、$G(x)|x^n - 1$、すなわち $G(x)$ は $x^n - 1$ を割り切ります。</p>
+        
+        <div class="definition-box">
+            <p><strong>定理 2.5.1:</strong> 情報記号多項式を $u(x)$、生成多項式を $G(x)$, $\deg G(x) = n-k$ とするとき、次式で与えられる符号語多項式 $v(x)$ の集合は符号長 $n$、情報記号数 $k$ の巡回符号 $C$ です。</p>
+            <div class="equation">
+                $v(x) = u(x)G(x)$
+            </div>
+            <p>ここで $\deg u(x) < k$, $G(x)|x^n - 1$ です。</p>
+        </div>
+        
+        <div class="note">
+            <p>式 (2.5.9) より明らかな通り、任意の $u(x)$ に対する $v(x)$ は常に $G(x)$ によって割り切られなければなりません。</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>符号化の例</h2>
+        
+        <h3>例 2.5.3</h3>
+        <p>$G(x) = 1+x+x^3$ とし、情報記号ベクトルが 1001 のとき、$u(x) = 1+x^3$ であるから符号語多項式 $v(x)$ は：</p>
+        
+        <div class="equation">
+            $v(x) = (1 + x^3)(1 + x + x^3)$<br>
+            $=1+ x^3 + x + x^4 + x^3 + x^6$<br>
+            $=1+ x + x^4 + x^6$
+        </div>
+        
+        <p>となり、符号ベクトルは 1100101 となります。</p>
+        
+        <p>例 2.5.3 でも明らかな通り、式 (2.5.9) では符号ベクトルの特定の位置に情報記号ベクトルが現れない、すなわち、非組織符号を生成します。</p>
+    </div>
+
+    <!-- 組織的巡回符号 -->
+    <div class="slide divider-slide">
+        <h1>4. 組織的巡回符号</h1>
+    </div>
+    
+    <div class="slide">
+        <h2>組織的巡回符号の生成</h2>
+        
+        <p>非組織符号の場合、符号ベクトルの特定の位置に情報記号ベクトルが現れないため、情報記号を直接読み取ることができません。そこで組織的巡回符号を考えます。</p>
+        
+        <div class="equation">
+            $u(x)x^{n-k} = q(x)G(x) + r(x)$
+        </div>
+        
+        <p>となるように $u(x)$ に $x^{n-k}$ を乗じ、これを $G(x)$ で割ったときの商を $q(x)$、剰余を $r(x)$ とすると次の定理が得られます。</p>
+        
+        <div class="definition-box">
+            <p><strong>定理 2.5.2:</strong> 組織的巡回符号の符号語 $v(x)$ は</p>
+            <div class="equation">
+                $v(x) = u(x)x^{n-k} - r(x)$<br>
+                $= q(x)G(x)$
+            </div>
+            <p>として生成されます。</p>
+        </div>
+        
+        <h3>例 2.5.4</h3>
+        <p>例 2.5.3 と同一の条件において、組織的巡回符号の符号ベクトルは次のようにして求められます。</p>
+        
+        <div class="equation">
+            $u(x)x^{n-k} = (1 + x^3)x^3$<br>
+            $= x^3 + x^6$<br>
+            $= (x + x^3)(1 + x + x^3) + x + x^2$
+        </div>
+        
+        <div class="equation">
+            $q(x) = x + x^3$<br>
+            $r(x) = x + x^2$<br>
+            $v(x) = x + x^2 + (1 + x^3)x^3$
+        </div>
+        
+        <p>ゆえに、符号ベクトルは 0111001 となります。</p>
+    </div>
+
+    <!-- 生成行列 -->
+    <div class="slide">
+        <h2>巡回符号の生成行列</h2>
+        
+        <p>$G(x)$, $xG(x)$, $\cdots$, $x^{k-1}G(x)$ は、明らかに巡回符号 $C$ の線形独立な符号語です。したがって、次の定理を得ます。</p>
+        
+        <div class="definition-box">
+            <p><strong>定理 2.5.3:</strong> 生成多項式 $G(x)$ が式 (2.5.8) で与えられるとき、長さ $n$ の巡回符号 $C$ の生成行列 $G$ は次式で与えられます。</p>
+            <div class="equation">
+                $G = \begin{bmatrix} 
+                g_0 & g_1 & \cdots & g_{n-k} & & & \\
+                & g_0 & g_1 & \cdots & g_{n-k} & & \\
+                & & \ddots & & & & \\
+                & & & g_0 & g_1 & \cdots & g_{n-k}
+                \end{bmatrix}$
+            </div>
+        </div>
+    </div>
+
+    <!-- パリティ検査多項式 -->
+    <div class="slide divider-slide">
+        <h1>5. パリティ検査多項式と双対符号</h1>
+    </div>
+    
+    <div class="slide">
+        <h2>パリティ検査多項式</h2>
+        
+        <p>巡回符号は $x^n - 1$ を割り切る多項式 $G(x)$ によりきまるため、イデアルの直交空間 (null space) を用いて次のように完全にきまります。</p>
+        
+        <div class="definition-box">
+            <p><strong>定義 2.5.2:</strong> 巡回符号の生成多項式を $G(x)$ とするとき、パリティ検査多項式 $H(x)$ は次式で与えられます。</p>
+            <div class="equation">
+                $H(x) = \frac{x^n - 1}{G(x)}$
+            </div>
+        </div>
+        
+        <p>この結果、符号語 $v(x) = u(x)G(x) \in C$ は</p>
+        
+        <div class="equation">
+            $v(x)H(x) = u(x)G(x)H(x) = 0 \mod x^n - 1$
+        </div>
+        
+        <p>となります。また、パリティ検査行列 $H$ は</p>
+        
+        <div class="equation">
+            $H(x) = h_0 + h_1x + \cdots + h_kx^k$
+        </div>
+        
+        <p>より</p>
+        
+        <div class="equation">
+            $H = \begin{bmatrix} 
+            h_k & \cdots & h_1 & h_0 & & & \\
+            & h_k & \cdots & h_1 & h_0 & & \\
+            & & \ddots & & & \ddots & \\
+            & & & h_k & \cdots & h_1 & h_0
+            \end{bmatrix}$
+        </div>
+        
+        <p>として与えられます。ここで、勿論 $v \in C$ ならば $vH^T = 0$ です。</p>
+    </div>
+    
+    <div class="slide">
+        <h2>双対符号</h2>
+        
+        <div class="definition-box">
+            <p><strong>定理 2.5.4:</strong> $(n, k)$ 巡回符号 $C$ の双対符号 $C^{\perp}$ は $(n, n-k)$ 巡回符号で、その生成多項式 $G^{\perp}(x)$ は次式で与えられます。</p>
+            <div class="equation">
+                $G^{\perp}(x) = x^kH(\frac{1}{x})$
+            </div>
+        </div>
+        
+        <p>ここで、$f_1(x)$ を $m$ 次の多項式としたとき、$f_2(x) = x^mf_1(\frac{1}{x})$ を $f_1(x)$ の相反多項式 (reciprocal polynomial) といいます。</p>
+        
+        <h3>例 2.5.5</h3>
+        <p>(1) 例 1.2.2 の $(n, 1, n)$ 反復符号の生成多項式 $G(x)$、パリティ検査多項式 $H(x)$ は</p>
+        
+        <div class="equation">
+            $G(x)=1+ x + x^2 + \cdots + x^{n-1}$<br>
+            $H(x)=1+ x$
+        </div>
+        
+        <p>で与えられます。したがって、生成行列 $G$ は例 2.1.2 の (2) で与えられ、パリティ検査行列 $H$ は (1) のパリティ検査符号の $G$ に等しいです。よって、$(n, 1, n)$ 反復符号の双対符号は $(n, n-1, 2)$ パリティ検査符号となります。</p>
+    </div>
+
+    <!-- 応用例 -->
+    <div class="slide divider-slide">
+        <h1>6. 巡回符号の応用例</h1>
+    </div>
+    
+    <div class="slide">
+        <h2>$(7, 4, 3)$ Hamming符号</h2>
+        
+        <p>$n = 7, k = 4$ の巡回符号を考えます。</p>
+        
+        <div class="equation">
+            $x^7 - 1 = (1 + x^2 + x^3)(1 + x + x^3)(1 + x)$
+        </div>
+        
+        <p>より</p>
+        
+        <div class="equation">
+            $G(x)=1+ x^2 + x^3$
+        </div>
+        
+        <p>に選ぶと</p>
+        
+        <div class="equation">
+            $H(x) = (1 + x + x^3)(1 + x)$<br>
+            $=1+ x^2 + x^3 + x^4$
+        </div>
+        
+        <p>となります。よって生成行列 $G$ とパリティ検査行列 $H$ は</p>
+        
+        <div class="equation">
+            $G = \begin{bmatrix} 
+            1 & 0 & 1 & 1 & & & \\
+            & 1 & 0 & 1 & 1 & & \\
+            & & 1 & 0 & 1 & 1 & \\
+            & & & 1 & 0 & 1 & 1
+            \end{bmatrix}$
+        </div>
+        
+        <div class="equation">
+            $H = \begin{bmatrix} 
+            1 & 1 & 1 & 0 & 1 & & \\
+            & 1 & 1 & 1 & 0 & 1 & \\
+            & & 1 & 1 & 1 & 0 & 1
+            \end{bmatrix}$
+        </div>
+        
+        <p>で与えられます。また、定理 2.5.2 を用い組織符号より求めると、$v(x) = 1 + x + x^4 + x^6$ となり、符号ベクトルは 1100101 となります。これは明らかに、例 2.2.1、式 (2.2.2.c) で示した $(7, 4, 3)$ Hamming 符号と同一です。</p>
+    </div>
+    
+    <div class="slide">
+        <h2>Golay符号と最大長系列符号</h2>
+        
+        <p>2元 $(23, 12, 7)$ Golay 符号 $G_{23}$ は巡回符号であり、その生成多項式 $G(x)$ は</p>
+        
+        <div class="equation">
+            $G(x) = x^{11} + x^{10} + x^6 + x^5 + x^4 + x^2 + 1$
+        </div>
+        
+        <p>で与えられます。ここで</p>
+        
+        <div class="equation">
+            $x^{23} - 1 = (x + 1)G(x)\tilde{G}(x)$<br>
+            $G^{\perp}(x) = x^{11}G(x^{-1}) = x^{12}(1 + \frac{1}{x})\tilde{G}(\frac{1}{x}) = (x + 1)G(x)$
+        </div>
+        
+        <p>です。</p>
+        
+        <div class="definition-box">
+            <p><strong>定理 2.5.8:</strong> $m$ 次, $m \geq 2$, の原始多項式をパリティ検査多項式 $H(x)$ とする符号は $(2^m - 1, m, 2^{m-1})$ 符号である。これを最大長系列符号（M系列符号）と呼ぶ。</p>
+        </div>
+        
+        <p>非ゼロの任意の1つの符号語を繰返し並べた系列は $2^m - 1$ を周期とするM系列で、0,1 が疑似的にランダムに生起し、PN(pseudo noise) 系列とも呼ばれます。</p>
+    </div>
+
+    <!-- バースト誤り訂正 -->
+    <div class="slide divider-slide">
+        <h1>7. バースト誤り訂正能力</h1>
+    </div>
+    
+    <div class="slide">
+        <h2>バースト誤り訂正能力</h2>
+        
+        <p>バースト誤りとは、一般に密集した誤りを指します。$\deg G(x) = n - k$、長さ $b$ のバースト誤り多項式を $x^j b(x), j = 0, 1, 2, \cdots, n - b, \deg b(x) = b - 1$ とすると $G(x)$ は $x^j$ と互いに素であるから、$b - 1 < n - k$ のとき、$G(x) \not| x^j b(x)$ です。したがって、次の定理が得られます。</p>
+        
+        <div class="definition-box">
+            <p><strong>定理 2.5.6:</strong> $G(x)$ で生成される（短縮）巡回符号は長さ $n - k$ 以下のすべての（単一集中）バースト誤りを検出する。</p>
+        </div>
+        
+        <p>$b > n - k$ のとき、受信系列から得られる非ゼロシンドロームがランダムに生起するとすれば、バースト誤りの見逃し確率は、$b = n - k + 1$ のとき $2^{-(n-k)+1}$, $b > n - k +

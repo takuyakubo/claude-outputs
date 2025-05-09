@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$']],
+            displayMath: [['$$', '$$']]
+          }
+        };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+    <title>Reed-Muller符号の解説</title>
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/index.css">
+</head>
+<body>
+    <!-- 表紙スライド -->
+    <div class="slide">
+        <div class="slide-title">
+            <h1>Reed-Muller符号</h1>
+            <p>線形符号理論講座</p>
+        </div>
+        <div style="text-align: center; margin-top: 50px;">
+            <h2>重要な符号とその数学的基礎</h2>
+            <h3>Reed-Muller符号の理論と応用</h3>
+            <p style="margin-top: 80px;">勉強会資料</p>
+            <p>2025年5月7日</p>
+        </div>
+    </div>
+
+    <!-- 目次スライド -->
+    <div class="slide">
+        <h2>目次</h2>
+        <ol>
+            <li>Reed-Muller符号の基本概念</li>
+            <li>定義と数学的表現</li>
+            <li>パラメータと特性</li>
+            <li>具体例</li>
+            <li>Reed-Muller符号と他の符号の関係</li>
+            <li>実用例</li>
+        </ol>
+        <div class="note">
+            <p>本スライドは、Reed-Muller符号に関する理論的背景から実用的な例まで体系的に学ぶことができる内容となっています。Reed-Muller符号は広範なパラメータを持つ符号の集合であり、多くの応用がある重要な符号です。</p>
+        </div>
+    </div>
+
+    <!-- 基本概念 -->
+    <div class="slide divider-slide">
+        <h1>1. Reed-Muller符号の基本概念</h1>
+    </div>
+
+    <div class="slide">
+        <h2>Reed-Muller符号とは</h2>
+        
+        <p>Reed-Muller(RM)符号は、1954年にD.E. ReedとD.E. Mullerによって独立に提案された、広範なパラメータをもつ符号の集合です [Ree54][Mul54]。</p>
+        
+        <div class="note">
+            <p>Reed-Muller符号は直交符号より拡張して得られる線形符号であり、多くの通信システムで利用されています。</p>
+        </div>
+        
+        <h3>Reed-Muller符号の特徴</h3>
+        <ul>
+            <li>広範なパラメータを持つ符号の集合</li>
+            <li>ベクトル積による構成が可能</li>
+            <li>効率的な符号化・復号アルゴリズム</li>
+            <li>宇宙探査機の通信などの実用的な応用例がある</li>
+        </ul>
+        
+        <div class="definition-box">
+            <p><strong>基本的な考え方：</strong></p>
+            <p>Reed-Muller符号は、特定の基底ベクトルとそれらのベクトル積から生成される線形空間として定義されます。</p>
+        </div>
+    </div>
+
+    <!-- 定義と数学的表現 -->
+    <div class="slide divider-slide">
+        <h1>2. 定義と数学的表現</h1>
+    </div>
+
+    <div class="slide">
+        <h2>ベクトル積の定義</h2>
+        
+        <p>長さ $n = 2^m$ の2つの2元ベクトル $a$, $b$ を考えます：</p>
+        
+        <div class="equation">
+            $a = (a_1, a_2, \cdots, a_n)$,<br>
+            $b = (b_1, b_2, \cdots, b_n)$,
+        </div>
+        
+        <p>ここで、$m$ は任意の正整数です。ベクトル積 $ab$ を次式で定義します：</p>
+        
+        <div class="equation">
+            $ab = (a_1b_1, a_2b_2, \cdots, a_nb_n)$.
+        </div>
+        
+        <div class="note">
+            <p>このベクトル積は各位置での成分同士の積を取る操作であり、Reed-Muller符号の構成において重要な役割を果たします。</p>
+        </div>
+        
+        <h3>基底ベクトルの例（$m = 4$, $n = 16$ の場合）</h3>
+        <div class="code-example">
+            $r_0 = 1111111111111111$,<br>
+            $r_1 = 0000000011111111$,<br>
+            $r_2 = 0000111100001111$,<br>
+            $r_3 = 0011001100110011$,<br>
+            $r_4 = 0101010101010101$.
+        </div>
+        
+        <p>なお、$m > 4$ の場合も同様のパターンで基底ベクトルを定義できます。</p>
+    </div>
+
+    <div class="slide">
+        <h2>Reed-Muller符号の定義</h2>
+        
+        <div class="definition-box">
+            <p><strong>定義 2.4.1 (Reed-Muller符号):</strong></p>
+            <p>$m+1$ 個の長さ $n = 2^m$ の基底 $r_0, r_1, \cdots, r_m$ と $r_1, r_2, \cdots, r_m$ の $r$ 個までのすべての組合せのベクトル積を基底とする線形ベクトル空間を $r$ 次 $(n, k, d)$ RM符号と呼びます。ただし、$m>r$ とします。</p>
+        </div>
+        
+        <p>このように、Reed-Muller符号は基底ベクトルとそれらの特定の組み合わせのベクトル積から生成される線形空間として特徴づけられます。</p>
+        
+        <div class="definition-box">
+            <p><strong>定理 2.4.1:</strong></p>
+            <p>$r$ 次 $(n, k, d)$ RM符号のパラメータは次式で与えられます：</p>
+            <div class="equation">
+                $n = 2^m$,<br>
+                $k = 1 + \binom{m}{1} + \cdots + \binom{m}{r}$,<br>
+                $d = 2^{m-r}$.
+            </div>
+        </div>
+        
+        <div class="note">
+            <p>これらのパラメータは、Reed-Muller符号の次数 $r$ と基底のサイズ $m$ によって決まります。</p>
+        </div>
+    </div>
+
+    <!-- パラメータと特性 -->
+    <div class="slide divider-slide">
+        <h1>3. パラメータと特性</h1>
+    </div>
+
+    <div class="slide">
+        <h2>Reed-Muller符号のパラメータ</h2>
+        
+        <p>$r$ 次 $(n, k, d)$ RM符号のパラメータ：</p>
+        
+        <ul>
+            <li><strong>符号長 $n$:</strong> $n = 2^m$ （$m$ は基底のサイズ）</li>
+            <li><strong>情報ビット数 $k$:</strong> $k = 1 + \binom{m}{1} + \cdots + \binom{m}{r}$</li>
+            <li><strong>最小距離 $d$:</strong> $d = 2^{m-r}$</li>
+        </ul>
+        
+        <div class="note">
+            <p>これらのパラメータから、Reed-Muller符号は $r$ が小さいほど高い誤り訂正能力を持ちますが、その分、情報率 ($k/n$) は低下します。逆に $r$ が大きいほど情報率は高くなりますが、誤り訂正能力は低下します。</p>
+        </div>
+        
+        <h3>Reed-Muller符号の特性</h3>
+        <ul>
+            <li>広範なパラメータの組み合わせを提供</li>
+            <li>符号の次数 $r$ によって誤り訂正能力を調整可能</li>
+            <li>直交符号を基本としているため、復号化が容易</li>
+            <li>多様な応用可能性</li>
+        </ul>
+    </div>
+
+    <!-- 具体例 -->
+    <div class="slide divider-slide">
+        <h1>4. 具体例</h1>
+    </div>
+
+    <div class="slide">
+        <h2>例 2.4.1: $m = 4$, $r = 3$ の場合</h2>
+        
+        <p>$m = 4$, $r = 3$ のとき、$15 \times 16$ の生成行列 $G$ は以下のように表されます：</p>
+        
+        <div class="equation">
+            $G = \begin{bmatrix} 
+            G_0 \\
+            G_1 \\
+            G_2 \\
+            G_3
+            \end{bmatrix}$,
+        </div>
+        
+        <p>ただし</p>
+        
+        <div class="equation">
+            $G_0 = [ r_0 ],$<br><br>
+            
+            $G_1 = \begin{bmatrix} 
+            r_1 \\
+            r_2 \\
+            r_3 \\
+            r_4
+            \end{bmatrix},$<br><br>
+            
+            $G_2 = \begin{bmatrix} 
+            r_1r_2 \\
+            r_1r_3 \\
+            r_1r_4 \\
+            r_2r_3 \\
+            r_2r_4 \\
+            r_3r_4
+            \end{bmatrix},$<br><br>
+            
+            $G_3 = \begin{bmatrix} 
+            r_1r_2r_3 \\
+            r_1r_2r_4 \\
+            r_1r_3r_4 \\
+            r_2r_3r_4
+            \end{bmatrix},$
+        </div>
+        
+        <p>で与えられます。このとき、3次 (16, 15, 2) RM符号が得られます。</p>
+    </div>
+
+    <div class="slide">
+        <h2>例 2.4.2: 実用例</h2>
+        
+        <p>Mariner 9号には、画像伝送のため1次 (32, 6, 16) RM符号が用いられています。</p>
+        
+        <div class="note">
+            <p>このRM符号は、宇宙探査機から地球への画像データの送信において、通信路のノイズによる誤りを訂正するために利用されました。</p>
+        </div>
+        
+        <h3>他の実用例</h3>
+        <ul>
+            <li>深宇宙通信</li>
+            <li>ディジタル放送</li>
+            <li>ストレージシステム</li>
+            <li>ワイヤレス通信</li>
+        </ul>
+    </div>
+
+    <!-- Reed-Muller符号と他の符号の関係 -->
+    <div class="slide divider-slide">
+        <h1>5. Reed-Muller符号と他の符号の関係</h1>
+    </div>
+
+    <div class="slide">
+        <h2>拡大Hamming符号との関係</h2>
+        
+        <p>Reed-Muller符号とHamming符号には興味深い関係があります。式 (2.4.3) で定義される基底ベクトルを用いて：</p>
+        
+        <div class="equation">
+            $H = \begin{bmatrix} 
+            r_0 \\
+            r_1 \\
+            \vdots \\
+            r_4
+            \end{bmatrix}$,
+        </div>
+        
+        <p>とおくと、$H$ は $(2^m, 2^m - m - 1, 4)$ 拡大Hamming符号のパリティ検査行列に等しくなります。ただし、$m = 4$ です。</p>
+        
+        <div class="note">
+            <p>したがって、これは一般に $m - 2$ 次RM符号であることがわかります。また、$G = [G_0, G_1, G_2]^T$ とおくと、2次 (16, 11, 4) RM符号が得られます。</p>
+        </div>
+        
+        <h3>その他の関連する符号</h3>
+        <ul>
+            <li>直交符号</li>
+            <li>BCH符号</li>
+            <li>巡回符号</li>
+        </ul>
+    </div>
+
+    <!-- 巡回符号への導入 -->
+    <div class="slide">
+        <h2>次のトピック：巡回符号</h2>
+        
+        <p>巡回符号は最もよく研究された符号の1つで、多くの性質が知られた重要な符号です。</p>
+        
+        <div class="definition-box">
+            <p><strong>定義 2.5.1 (巡回符号):</strong></p>
+            <p>線形かつ符号語の巡回置換もまた符号語であるような符号 $C$ を巡回符号と呼びます。</p>
+        </div>
+        
+        <p>定義より、$v = (v_0, v_1, v_2, \cdots, v_{n-1}) \in C$ のとき $v^c = (v_{n-1}, v_0, v_1, \cdots, v_{n-2}) \in C$ が成り立ちます。</p>
+        
+        <div class="note">
+            <p>巡回符号は符号化比率の点でも優れ、バースト誤り（連続した誤り）の訂正能力も持つ線形符号です。Reed-Muller符号の特殊なケースには巡回符号となるものもあります。</p>
+        </div>
+    </div>
+
+    <!-- まとめ -->
+    <div class="slide">
+        <h2>まとめ</h2>
+        
+        <ul>
+            <li>Reed-Muller符号は広範なパラメータを持つ重要な符号の集合</li>
+            <li>基底ベクトルとそれらの組み合わせのベクトル積によって構成される</li>
+            <li>パラメータは $n = 2^m$, $k = 1 + \binom{m}{1} + \cdots + \binom{m}{r}$, $d = 2^{m-r}$</li>
+            <li>次数 $r$ によって誤り訂正能力と情報率のトレードオフを調整可能</li>
+            <li>Mariner 9号など実際の宇宙探査機の通信に利用されている</li>
+            <li>Hamming符号などの他の重要な符号と密接な関係がある</li>
+        </ul>
+        
+        <div class="note">
+            <p>Reed-Muller符号は理論的な面白さと実用性を兼ね備えた重要な符号であり、符号理論において基礎的な位置を占めています。様々なパラメータの選択が可能であるため、多様な通信環境に適応できる柔軟性も持っています。</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>参考文献</h2>
+        
+        <ol>
+            <li>[Ree54] D. E. Reed, "A class of multiple-error-correcting codes and the decoding scheme," IRE Trans. Information Theory, vol. 4, pp. 38-49, 1954.</li>
+            <li>[Mul54] D. E. Muller, "Application of boolean algebra to switching circuit design and to error detection," IRE Trans. Electronic Computation, vol. EC-3, pp. 6-12, 1954.</li>
+        </ol>
+    </div>
+</body>
+</html>

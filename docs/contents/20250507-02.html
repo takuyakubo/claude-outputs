@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$']],
+            displayMath: [['$$', '$$']]
+          }
+        };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+    <title>Golay符号の解説</title>
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/index.css">
+</head>
+<body>
+    <!-- 表紙スライド -->
+    <div class="slide">
+        <div class="slide-title">
+            <h1>Golay符号の理論と応用</h1>
+            <p>線形符号理論講座</p>
+        </div>
+        <div style="text-align: center; margin-top: 50px;">
+            <h2>重要な符号とその数学的基礎</h2>
+            <h3>Golay符号の性質と完全符号</h3>
+            <p style="margin-top: 80px;">勉強会資料</p>
+            <p>2025年5月7日</p>
+        </div>
+    </div>
+
+    <!-- 目次スライド -->
+    <div class="slide">
+        <h2>目次</h2>
+        <ol>
+            <li>Golay符号の基本概念</li>
+            <li>2元(23, 12, 7) Golay符号</li>
+            <li>拡大Golay符号</li>
+            <li>Golayとその他の完全符号の関係</li>
+        </ol>
+        <div class="note">
+            <p>本スライドは、Golay符号に関する理論的背景と特性について学ぶ内容となっています。Golay符号は、Hammingと並んで最も重要な完全符号の一つです。</p>
+        </div>
+    </div>
+
+    <!-- Golay符号の基本概念 -->
+    <div class="slide divider-slide">
+        <h1>1. Golay符号の基本概念</h1>
+    </div>
+
+    <div class="slide">
+        <h2>Golay符号とは</h2>
+        
+        <p>Golay符号 [Gol49] は、完全符号の一つとして知られている重要な線形符号です。</p>
+        
+        <div class="note">
+            <p>Golay符号は、Marcel J. E. Golayによって1949年に開発された線形符号で、Hamming符号と同様に完全符号であり、強力な誤り訂正能力を持ちます。</p>
+        </div>
+        
+        <h3>Golay符号の特徴</h3>
+        <ul>
+            <li>主に2元(23, 12, 7)符号と3元(11, 6, 5)符号の2種類がある</li>
+            <li>完全符号(perfect code)である</li>
+            <li>2元(23, 12, 7) Golay符号は最大3重誤り訂正が可能</li>
+        </ul>
+        
+        <div class="definition-box">
+            <p><strong>完全符号 (perfect code)：</strong></p>
+            <p>重み $t$ 以下のすべてのパターンをコセットリーダとし、それ以外のパターンをコセットリーダとしてもたない符号。</p>
+            <p>Hamming符号とGolay符号は、重要な完全符号の例です。</p>
+        </div>
+    </div>
+
+    <!-- 2元Golay符号 -->
+    <div class="slide divider-slide">
+        <h1>2. 2元(23, 12, 7) Golay符号</h1>
+    </div>
+
+    <div class="slide">
+        <h2>2元(23, 12, 7) Golay符号の定義</h2>
+
+        <p>2元(23, 12, 7) Golay符号が完全符号であることは、以下の等式が成り立つことから確認できます：</p>
+
+        <div class="equation">
+            $2^{12} \left[\binom{23}{0} + \binom{23}{1} + \binom{23}{2} + \binom{23}{3}\right] = 2^{23}$
+        </div>
+
+        <div class="note">
+            <p>この等式は、(23, 12, 7) Golay符号が完全符号であることを示しています。つまり、誤り訂正能力が最適であり、すべての可能なシンドロームに対して明確な対応関係があります。</p>
+        </div>
+
+        <h3>パリティ検査行列</h3>
+        <p>以下に2元(23, 12, 7) Golay符号 $G_{23}$ のパリティ検査行列 $P^T$ の例を示します：</p>
+
+        <div class="code-example">
+P^T = [
+    100111000111
+    101011011001
+    101101101010
+    101110110100
+    110011101100
+    110101110001
+    110110011010
+    111001010110
+    111010100011
+    111100001101
+    011111111111
+]
+        </div>
+
+        <div class="definition-box">
+            <p><strong>定理 2.3.1：</strong></p>
+            <p>2元(23, 12, 7) Golay符号 $G_{23}$ は完全符号である。</p>
+        </div>
+    </div>
+
+    <!-- 拡大Golay符号 -->
+    <div class="slide divider-slide">
+        <h1>3. 拡大Golay符号</h1>
+    </div>
+
+    <div class="slide">
+        <h2>拡大Golay符号の定義と特性</h2>
+
+        <p>定理2.2.2（Hamming符号のスライドで示したもの）より、2元(23, 12, 7) Golay符号 $G_{23}$ から拡大Golay符号を構築できます。</p>
+
+        <div class="definition-box">
+            <p><strong>定理 2.3.2：</strong></p>
+            <p>拡大Golay符号 $G_{24}$ は自己双対符号、すなわち $G_{24}^{\perp} = G_{24}$ である。</p>
+        </div>
+
+        <h3>拡大Golay符号の特性</h3>
+        <ul>
+            <li>2元(24, 12, 8)符号として定義される</li>
+            <li>符号語の重みはすべて4の倍数</li>
+            <li>自己双対符号である（$G_{24}^{\perp} = G_{24}$）</li>
+            <li>任意の位置の1つの記号を除去すると元のGolay符号 $G_{23}$ が得られる</li>
+        </ul>
+
+        <div class="note">
+            <p>拡大Golay符号 $G_{24}$ は、符号理論において非常に興味深い性質を持つ重要な符号の一つです。自己双対という特性は特に重要で、これは符号とその双対符号が一致することを意味します。</p>
+        </div>
+
+        <h3>誤り訂正能力</h3>
+        <p>拡大Golay符号 $G_{24}$ は、最小距離 $d = 8$ であるため、3重誤りまで訂正でき、4重誤りまで検出できます。</p>
+    </div>
+
+    <!-- Golayとその他の完全符号の関係 -->
+    <div class="slide divider-slide">
+        <h1>4. Golayとその他の完全符号の関係</h1>
+    </div>
+
+    <div class="slide">
+        <h2>完全符号の特徴と制限</h2>
+
+        <h3>その他の完全符号</h3>
+        <ul>
+            <li>3元(11, 6, 5) Golay符号も完全符号である</li>
+            <li>注目すべき点として、次式が成り立つにもかかわらず、2元(90, 78, 5)符号は存在しないことが証明されている：</li>
+        </ul>
+
+        <div class="equation">
+            $2^{78} \left[\binom{90}{0} + \binom{90}{1} + \binom{90}{2}\right] = 2^{90}$
+        </div>
+
+        <div class="definition-box">
+            <p><strong>定理：</strong></p>
+            <p>自明でない $q$ 元完全符号は、Hamming符号またはGolay符号と同一のパラメータを持つ。ここで、$q$ は素数のべき乗である。</p>
+        </div>
+
+        <div class="note">
+            <p>完全符号は、その優れた性質により理論的に非常に重要ですが、Hamming符号とGolay符号（および自明な繰り返し符号）以外の完全符号は存在しないことが知られています。これは符号理論における重要な結果です。</p>
+        </div>
+    </div>
+
+    <!-- まとめ -->
+    <div class="slide">
+        <h2>まとめ</h2>
+        
+        <ul>
+            <li>Golay符号は、符号理論において極めて重要な完全符号の一つ</li>
+            <li>2元(23, 12, 7) Golay符号は3重誤りまでの訂正が可能</li>
+            <li>拡大Golay符号(24, 12, 8)は自己双対符号であり、独特の数学的性質を持つ</li>
+            <li>3元Golay符号(11, 6, 5)も完全符号として知られている</li>
+            <li>自明でない完全符号は、Hamming符号またはGolay符号と同一のパラメータを持つ</li>
+        </ul>
+        
+        <div class="note">
+            <p>Golay符号は、その完全符号としての性質と優れた誤り訂正能力から、通信システムや情報理論において重要な役割を果たしています。拡大Golay符号の自己双対性という特性は、符号理論と代数的組み合わせ論の美しい関係を示しています。</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>参考文献</h2>
+        
+        <ol>
+            <li>[Gol49] M. J. E. Golay, "Notes on digital coding," Proceedings of the IRE, vol. 37, p. 657, 1949.</li>
+            <li>[Ham50] R. W. Hamming, "Error detecting and error correcting codes," Bell System Technical Journal, vol. 29, no. 2, pp. 147-160, 1950.</li>
+        </ol>
+    </div>
+</body>
+</html>
